@@ -96,14 +96,14 @@ begin
 
 	-- CONCURRENT STATEMENTS ------------------------------------------------------------------------------
 	-- Next State Logic
-	-- Recieved help on implementation and syntax from C3C Noah Chavez and C3C Wu
+	-- Recieved help on implementation and syntax from C3C Noah Chavez and C3C John Isacco
     f_Q_next <= s_floor2 when (f_Q = s_floor1 and i_up_down = '1') else --<state> when (<condition>) else -- going up
                 s_floor3 when (f_Q = s_floor2 and i_up_down = '1') else
                 s_floor4 when (f_Q = s_floor3 and i_up_down = '1') else
                 s_floor3 when (f_Q = s_floor4 and i_up_down = '0') else -- going down
                 s_floor2 when (f_Q = s_floor3 and i_up_down = '0') else
                 s_floor1 when (f_Q = s_floor2 and i_up_down = '0') else
-                f_Q; -- default case
+                f_Q; -- default case -- C3C Isacco
   
 	-- Output logic
     with f_Q select

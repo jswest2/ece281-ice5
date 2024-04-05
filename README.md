@@ -30,4 +30,8 @@ Assert statements of other severity levels, such as "error" w
 
 # # Documentation Statement
 
-I received help from C3C Noah Chavez in implementing my next-state logic. 
+I received help from C3C Noah Chavez and C3C John Isacco in implementing my next-state logic.
+
+# # Waveform
+
+ 
