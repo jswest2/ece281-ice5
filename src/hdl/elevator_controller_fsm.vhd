@@ -11,8 +11,8 @@
 --| ---------------------------------------------------------------------------
 --|
 --| FILENAME      : MooreElevatorController.vhd
---| AUTHOR(S)     : Capt Phillip Warner, Capt Dan Johnson, Capt Brian Yarbrough, ***YourName***
---| CREATED       : 03/2018 Last Modified on 06/24/2020
+--| AUTHOR(S)     : Capt Phillip Warner, Capt Dan Johnson, Capt Brian Yarbrough, C3C Jack West
+--| CREATED       : 03/2018 Last Modified on 06/24/2020 (4/3/2024)
 --| DESCRIPTION   : This file implements the ICE5 Basic elevator controller (Moore Machine)
 --|
 --|  The system is specified as follows:
@@ -96,20 +96,21 @@ begin
 
 	-- CONCURRENT STATEMENTS ------------------------------------------------------------------------------
 	-- Next State Logic
-    f_Q_next <= <state> when (<condition>) else -- going up
-                ...
-                ...
-                ... -- going down
-                ...
-                ... else
-                ...; -- default case
+	-- Recieved help on implementation and syntax from C3C Noah Chavez and C3C Wu
+    f_Q_next <= s_floor2 when (f_Q = s_floor1 and i_up_down = '1') else --<state> when (<condition>) else -- going up
+                s_floor3 when (f_Q = s_floor2 and i_up_down = '1') else
+                s_floor4 when (f_Q = s_floor3 and i_up_down = '1') else
+                s_floor3 when (f_Q = s_floor4 and i_up_down = '0') else -- going down
+                s_floor2 when (f_Q = s_floor3 and i_up_down = '0') else
+                s_floor1 when (f_Q = s_floor2 and i_up_down = '0') else
+                f_Q; -- default case
   
 	-- Output logic
     with f_Q select
-        o_floor <= <value> when s_floor1,
-                ...
-                ...
-                <value> when others; -- default is floor 2
+        o_floor <= "0001" when s_floor1,--<value> when s_floor1,
+                "0011" when s_floor3,
+                "0100" when s_floor4,
+                "0010" when others; -- default is floor 2
 	
 	-------------------------------------------------------------------------------------------------------
 	
@@ -118,9 +119,15 @@ begin
 	register_proc : process (i_clk)
     begin
          -- synchronous reset
-        
+        if i_reset = '1' then
+            f_Q <= s_floor2;
         -- if elevator is enabled, advance floors
+        elsif i_stop = '0' then
+            f_Q <= f_Q_next;
         -- if not enabled, stay at current floor
+        elsif i_stop = '1' then
+            f_Q <= f_Q;
+        end if;
     
 	end process register_proc;	
 	
